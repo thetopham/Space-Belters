@@ -31,3 +31,7 @@ description: Space Belters Roadmap
 * Continue to introduce new features, upgrades, and innovations based on community feedback and market trends.
 * Potential developments may include new staking opportunities, utilities for the ERC20 token, and integration with decentralized finance (DeFi) platforms.
 * This stage will ensure that the Space Belters collection remains relevant, engaging, and valuable for collectors.
+
+{% content-ref url="./" %}
+[.](./)
+{% endcontent-ref %}
