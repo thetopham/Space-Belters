@@ -60,13 +60,13 @@ contract token is ERC20, ReentrancyGuard  {
      function contribute() public payable nonReentrant {
         require(mintingEnabled, "Minting is currently disabled");
         require(msg.value > 0, "ETH amount must be greater than 0");
-
-        // Calculate the number of tokens the user should receive based on the minting price
-        uint256 tokenAmount = msg.value.div(flatMintingPrice);
+      
         // Calculate the number of tokens the user should receive based on a multiple of the price of a single token
-        uint256 mintingmultiple = singleTokenValue * mintMultiplier ;
+        uint256 mintPrice = singleTokenValue * mintMultiplier ;
+        // Calculate the number of tokens the user should receive based on the minting price
+        uint256 tokenAmount = msg.value.div(mintPrice);
         // Mint the calculated number of tokens to the sender
-        _mint(msg.sender, mintingmultiple);
+        _mint(msg.sender, tokenAmount);
      }
 
 
