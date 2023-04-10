@@ -1,0 +1,103 @@
+// SPDX-License-Identifier: GPL-3.0
+pragma solidity ^0.8.0;
+
+import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "./erc20token.sol";
+
+
+
+contract NFTUpgrade is ReentrancyGuard {
+    IERC721 public nftContract;
+    Itoken public tokenContract;
+    address public owner;
+
+    mapping(uint256 => uint256) private nftLevels;
+
+    event Upgrade(uint256 tokenId, uint256 newLevel);
+
+    constructor(address _nftContract, address _tokenContract) {
+        nftContract = IERC721(_nftContract);
+        tokenContract = Itoken(_tokenContract);
+        owner = msg.sender;
+    }
+
+    function upgradeNFT(uint256 _tokenId) external nonReentrant {
+        require(nftContract.ownerOf(_tokenId) == msg.sender, "You do not own this NFT");
+        require(tokenContract.totalSupply() > tokenContract.getMinTokenSupply(), "Token supply limit reached");
+        require(address(tokenContract).balance > tokenContract.getMinEthBalance(), "ETH balance limit reached");
+
+        uint256 currentLevel = nftLevels[_tokenId];
+        if (currentLevel == 0) {
+            currentLevel = 1;
+        }
+
+        uint256 upgradeCost = getUpgradeCost(currentLevel);
+        require(tokenContract.balanceOf(msg.sender) >= upgradeCost, "Insufficient tokens");
+
+        tokenContract.transferFrom(msg.sender, address(this), upgradeCost);
+        tokenContract.burn(upgradeCost);
+
+        nftLevels[_tokenId] = currentLevel + 1;
+
+        emit Upgrade(_tokenId, nftLevels[_tokenId]);
+    }      
+
+
+function getUpgradeCost(uint256 _level) public pure returns (uint256) {
+    uint256[60] memory upgradeCosts = [        uint256(1000000000000000000), 2100000000000000000, 3310000000000000000, 4641000000000010000, 6105100000000010000, 7715610000000010000, 9487171000000010000, 11435888100000000000, 13579546961000000000, 15937424601000000000,        18531167061100000000, 21384283767210000000, 24522712143931000000, 27974983358324100000, 31772481694156600000, 35949729863572200000, 40544702849929500000, 45599173134922400000, 51159090448414600000, 57274999493256100000,        64002499442581700000, 71402749396839900000, 79543024325523900000, 88497326758076300000, 98347059433883900000, 109181765377272000000, 121099941915000000000, 134209936106500000000, 148630929717150000000, 164494022688864000000,        181943424957751000000, 201137767453526000000, 222251544198879000000, 245476698618767000000, 271024368480643000000, 299126805328708000000, 330039485861578000000, 364043434447736000000, 401447777892510000000, 442592555681761000000,        487851811249937000000, 537636992374931000000, 592400691612424000000, 652640760773667000000, 718904836851033000000, 791795320536137000000, 871974852589750000000, 960172337848725000000, 1057189571633600000000, 1163908528796960000000,        1281299381676650000000, 1410429319844320000000, 1552472251828750000000, 1708719477011630000000, 1880591424712790000000, 2069650567184070000000, 2277615623902480000000, 2506377186292720000000, 2758014904922000000000, 3034816395414200000000    ];
+    require(_level > 0 && _level <= upgradeCosts.length, "Invalid level");
+    return upgradeCosts[_level - 1];
+}
+
+function upgradeNFTMultipleLevels(uint256 _tokenId, uint256 _levels) external nonReentrant {
+    require(nftContract.ownerOf(_tokenId) == msg.sender, "You do not own this NFT");
+    require(tokenContract.totalSupply() > tokenContract.getMinTokenSupply(), "Token supply limit reached");
+    require(address(tokenContract).balance > tokenContract.getMinEthBalance(), "ETH balance limit reached");
+
+    uint256 currentLevel = nftLevels[_tokenId];
+    if (currentLevel == 0) {
+        currentLevel = 1;
+    }
+
+    uint256 totalUpgradeCost = 0;
+    for (uint256 i = 0; i < _levels; i++) {
+        totalUpgradeCost += getUpgradeCost(currentLevel + i);
+    }
+    require(tokenContract.balanceOf(msg.sender) >= totalUpgradeCost, "Insufficient tokens");
+
+    tokenContract.transferFrom(msg.sender, address(this), totalUpgradeCost);
+    tokenContract.burn(totalUpgradeCost);
+
+    nftLevels[_tokenId] = currentLevel + _levels;
+
+    emit Upgrade(_tokenId, nftLevels[_tokenId]);
+}
+
+
+function getMultiLevelUpgradeCost(uint256 _level, uint256 _numLevels) public pure returns (uint256) {
+    uint256 totalCost = 0;
+    for (uint256 i = 0; i < _numLevels; i++) {
+        totalCost += getUpgradeCost(_level + i);
+    }
+    return totalCost;
+}
+
+
+
+    function getNFTLevel(uint256 _tokenId) public view returns (uint256) {
+        uint256 level = nftLevels[_tokenId];
+        return level == 0 ? 1 : level;
+    }
+
+    function setNFTContract(address _nftContract) external {
+        require(msg.sender == owner, "Only the owner can set the NFT contract");
+        nftContract = IERC721(_nftContract);
+    }
+
+    function setTokenContract(address _tokenContract) external {
+        require(msg.sender == owner, "Only the owner can set the token contract");
+        tokenContract = Itoken(_tokenContract);
+    }
+}
