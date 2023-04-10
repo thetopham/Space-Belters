@@ -138,6 +138,8 @@ The Space Belters team believes that the community is the foundation of the proj
 
 The revised Space Belters whitepaper incorporates critical changes, such as the inclusion of the ERC20 token, multiple smart contracts for different purposes, and an enhanced staking reward system based on NFT levels. These modifications aim to create a more engaging and interactive experience for collectors and enthusiasts alike. The updated roadmap reflects the project's dedication to continuous improvement, community engagement, and the pursuit of innovative opportunities within the Tiamat Universe.
 
-&#x20;
+&#x20;By integrating unique digital art, a futuristic universe, and advanced staking features, the Space Belters project stands out in the NFT landscape. Through strategic partnerships, a commitment to innovation, and a strong focus on community building, the Space Belters project is poised to redefine the NFT experience and deliver a captivating journey for collectors and enthusiasts alike.
 
-By integrating unique digital art, a futuristic universe, and advanced staking features, the Space Belters project stands out in the NFT landscape. Through strategic partnerships, a commitment to innovation, and a strong focus on community building, the Space Belters project is poised to redefine the NFT experience and deliver a captivating journey for collectors and enthusiasts alike.
+{% content-ref url="roadmap.md" %}
+[roadmap.md](roadmap.md)
+{% endcontent-ref %}
