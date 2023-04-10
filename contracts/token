@@ -26,6 +26,7 @@ contract token is ERC20, ReentrancyGuard  {
     bool public mintingEnabled;
 
     uint256 public flatMintingPrice = 0.001 ether;
+    uint256 public mintMultiplier = 771 ;
     uint256 public singleTokenValue = address(this).balance.mul(1e18).div(totalSupply());
     uint256 public minTokenSupply = 0 ;  
     uint256 public minEthBalance = 0 ether;    
@@ -63,7 +64,7 @@ contract token is ERC20, ReentrancyGuard  {
         // Calculate the number of tokens the user should receive based on the minting price
         uint256 tokenAmount = msg.value.div(flatMintingPrice);
         // Calculate the number of tokens the user should receive based on a multiple of the price of a single token
-        uint256 mintingmultiple = singleTokenValue * 771 ;
+        uint256 mintingmultiple = singleTokenValue * mintMultiplier ;
         // Mint the calculated number of tokens to the sender
         _mint(msg.sender, mintingmultiple);
      }
@@ -87,6 +88,11 @@ contract token is ERC20, ReentrancyGuard  {
 
     function setFlatMintingPrice(uint256 _flatMintingPrice) external onlyOwner {
         flatMintingPrice = _flatMintingPrice;
+
+     }
+
+     function setmintMultiplier(uint256 _mintMultiplier) external onlyOwner {
+        mintMultiplier = _mintMultiplier;
 
      }
 
