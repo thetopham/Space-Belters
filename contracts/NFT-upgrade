@@ -24,9 +24,7 @@ contract NFTUpgrade is ReentrancyGuard {
     }
 
     function upgradeNFT(uint256 _tokenId) external nonReentrant {
-        require(nftContract.ownerOf(_tokenId) == msg.sender, "You do not own this NFT");
-        require(tokenContract.totalSupply() > tokenContract.getMinTokenSupply(), "Token supply limit reached");
-        require(address(tokenContract).balance > tokenContract.getMinEthBalance(), "ETH balance limit reached");
+        require(nftContract.ownerOf(_tokenId) == msg.sender, "You do not own this NFT");        
 
         uint256 currentLevel = nftLevels[_tokenId];
         if (currentLevel == 0) {
@@ -53,8 +51,7 @@ function getUpgradeCost(uint256 _level) public pure returns (uint256) {
 
 function upgradeNFTMultipleLevels(uint256 _tokenId, uint256 _levels) external nonReentrant {
     require(nftContract.ownerOf(_tokenId) == msg.sender, "You do not own this NFT");
-    require(tokenContract.totalSupply() > tokenContract.getMinTokenSupply(), "Token supply limit reached");
-    require(address(tokenContract).balance > tokenContract.getMinEthBalance(), "ETH balance limit reached");
+   
 
     uint256 currentLevel = nftLevels[_tokenId];
     if (currentLevel == 0) {
