@@ -2,7 +2,7 @@
 
 ## Overview
 
-* [💡 Space Belters White Paper (Draft)](README.md)
+* [💡 Space Belters White Paper (Draft)](space-belters-white-paper-draft.md)
 
 ***
 
