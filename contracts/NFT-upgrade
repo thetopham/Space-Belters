@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
@@ -11,7 +11,7 @@ import "./erc20token.sol";
 contract NFTUpgrade is ReentrancyGuard {
     IERC721 public nftContract;
     Itoken public tokenContract;
-    address public owner;
+    address public immutable owner;
 
     mapping(uint256 => uint256) private nftLevels;
 
