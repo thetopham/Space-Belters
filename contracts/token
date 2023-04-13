@@ -21,7 +21,7 @@ contract token is ERC20, ReentrancyGuard  {
     using SafeMath for uint256;
 
     uint256 private constant INITIAL_SUPPLY = 328000000 * (10**18); // 328 million tokens with 18 decimal places
-    address public owner;
+    address public immutable owner;
     mapping(address => bool) private exemptAddresses; // Define a mapping to store exempt addresses
 
     bool public mintingEnabled;
@@ -60,9 +60,8 @@ contract token is ERC20, ReentrancyGuard  {
         require(msg.value > 0, "ETH amount must be greater than 0");
       
         // Calculate the number of tokens the user should receive based on a multiple of the price of a single token
-        uint256 mintPrice = singleTokenValue * mintMultiplier ;
-        // Calculate the number of tokens the user should receive based on the minting price
-        uint256 tokenAmount = msg.value.div(mintPrice);
+        uint256 tokenAmount = msg.value.mul(1e18).div(singleTokenValue).mul(mintMultiplier);
+
         // Mint the calculated number of tokens to the sender
         _mint(msg.sender, tokenAmount);
      }
